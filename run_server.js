@@ -14,7 +14,7 @@ function open_con() {
         }
         console.log('Connected to the tweets.db database.');
     });
-    //db.run('CREATE TABLE IF NOT EXISTS handles  ("entry_id" INTEGER PRIMARY KEY AUTOINCREMENT,"handle" TEXT NOT NULL,"month" INTEGER NOT NULL, "day" INTEGER NOT NULL, "year" INTEGER NOT NULL, "hour" INTEGER NOT NULL, "minute" TEXT NOT NULL)');
+    //db.run('CREATE TABLE IF NOT EXISTS handles  ("entry_id" INTEGER PRIMARY KEY AUTOINCREMENT,"handle" TEXT NOT NULL,"month" INTEGER NOT NULL, "day" INTEGER NOT NULL, "year" INTEGER NOT NULL, "hour" INTEGER NOT NULL, "minute" INTEGER NOT NULL)');
     // create the handles table is it doesn't exist
     // NOTE: you cannot create a table if you have an INSERT anywhere in the code
     // that is why it is commented out, it won't work unless you comment out the db.run(query) below
