@@ -14,7 +14,7 @@ function open_con() {
         }
         console.log('Connected to the tweets.db database.');
     });
-    //db.run('CREATE TABLE IF NOT EXISTS handles  ("entry_id" INTEGER PRIMARY KEY AUTOINCREMENT,"handle" TEXT NOT NULL,"month" INTEGER NOT NULL, "day" INTEGER NOT NULL, "year" INTEGER NOT NULL, "hour" INTEGER NOT NULL, "minute" INTEGER NOT NULL)');
+    //db.run('CREATE TABLE IF NOT EXISTS handles  ("entry_id" INTEGER PRIMARY KEY AUTOINCREMENT,"handle" TEXT NOT NULL,"month" INTEGER NOT NULL, "day" INTEGER NOT NULL, "year" INTEGER NOT NULL, "hour" INTEGER NOT NULL, "minute" TEXT NOT NULL)');
     // create the handles table is it doesn't exist
     // NOTE: you cannot create a table if you have an INSERT anywhere in the code
     // that is why it is commented out, it won't work unless you comment out the db.run(query) below
@@ -29,6 +29,8 @@ function close_con() {
     });
 }
 // function to close the sqlite connection
+
+
 
 // this function will parse our POST data for us
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -46,19 +48,12 @@ app.get('/handle', function (req, res) {
 
 // when the server gets a POST request at this url (rather than a GET request), the server will run the code below
 app.post('/handle', urlencodedParser, function (req, res) {
-    if (today.getMinutes() < 10) {
-        var min = today.getMinutes()
-        var zero = 0
-        var minutes = zero.toString() + min.toString();
-    } else {
-        minutes = today.getMinutes();
-    };
-    // setting the minutes (if < 10 put a 0 in front for readability)
 
-    var month = (today.getMonth()+1)
-    var day = today.getDate()
-    var year = today.getFullYear()
-    var hour = today.getHours()
+    let month = (today.getMonth()+1)
+    let day = today.getDate()
+    let year = today.getFullYear()
+    let hour = today.getHours()
+    let minutes = today.getMinutes();
     var handle_entered = '"' + `${req.body['handle']}` + '"'
     // setting the other time variables and the handle
     // NOTE: we add "" around the handle string so that SQLite recognizes it as a string when we insert it,
@@ -68,10 +63,11 @@ app.post('/handle', urlencodedParser, function (req, res) {
     open_con();
     // open connection to database
 
+
     console.log(handle_entered +'' + ' ' + month + '-' + day + '-' + year + ' ' + hour + ':' + minutes);
     // debug print statement
 
-    var query = 'INSERT INTO handles(handle, month, day, year, hour, minute) VALUES(' + handle_entered + ',' + month + ',' + day + ',' + year + ',' + hour + ',' + minutes + ')';
+    let query = 'INSERT INTO handles(handle, month, day, year, hour, minute) VALUES(' + handle_entered + ',' + month + ',' + day + ',' + year + ',' + hour + ',' + minutes + ')';
     db.run(query);
     // insert data into table
 
@@ -95,11 +91,23 @@ app.get('/list', function (req, res) {
         }
         // here we user a FOR loop like in python to print each attribute of every row in the database
         rows.forEach((row) => {
+            if (row.minute < 10) {
+                let min = row.minute
+                let zero = 0
+                var minutes = zero.toString() + min.toString();
+                console.log(row.entry_id, row.handle, row.month + '-' + row.day + '-' + row.year, row.hour + ':' + minutes);
+                // NOTE: the minutes column doesn't cannot store leading zeros
+                // so to combat this problem we add a zero onto it when it is read
+                // Don't forget!
+            };
             console.log(row.entry_id, row.handle, row.month + '-' + row.day + '-' + row.year, row.hour + ':' + row.minute);
+            // if minute column is > 10 no need to add a leading zero
         });
     });
     close_con();
+    // close connection
     res.redirect('/')
+    // redirect
 });
 
 app.listen(3000, () => {
