@@ -14,7 +14,7 @@ function open_con() {
         }
         console.log('Connected to the tweets.db database.');
     });
-    //db.run('CREATE TABLE IF NOT EXISTS handles  ("entry_id" INTEGER PRIMARY KEY AUTOINCREMENT,"handle" TEXT NOT NULL,"month" INTEGER NOT NULL, "day" INTEGER NOT NULL, "year" INTEGER NOT NULL, "hour" INTEGER NOT NULL, "minute" INTEGER NOT NULL)');
+    //db.run('CREATE TABLE IF NOT EXISTS handles  ("entry_id" INTEGER PRIMARY KEY AUTOINCREMENT,"handle" TEXT NOT NULL,"mood" INTEGER NOT NULL,"month" INTEGER NOT NULL, "day" INTEGER NOT NULL, "year" INTEGER NOT NULL, "hour" INTEGER NOT NULL, "minute" INTEGER NOT NULL)');
     // create the handles table is it doesn't exist
     // NOTE: you cannot create a table if you have an INSERT anywhere in the code
     // that is why it is commented out, it won't work unless you comment out the db.run(query) below
@@ -67,7 +67,7 @@ app.post('/handle', urlencodedParser, function (req, res) {
     console.log(handle_entered +'' + ' ' + month + '-' + day + '-' + year + ' ' + hour + ':' + minutes);
     // debug print statement
 
-    let query = 'INSERT INTO handles(handle, month, day, year, hour, minute) VALUES(' + handle_entered + ',' + month + ',' + day + ',' + year + ',' + hour + ',' + minutes + ')';
+    let query = 'INSERT INTO handles(handle, mood, month, day, year, hour, minute) VALUES(' + handle_entered + ',1,' + month + ',' + day + ',' + year + ',' + hour + ',' + minutes + ')';
     db.run(query);
     // insert data into table
 
@@ -95,12 +95,12 @@ app.get('/list', function (req, res) {
                 let min = row.minute
                 let zero = 0
                 var minutes = zero.toString() + min.toString();
-                console.log(row.entry_id, row.handle, row.month + '-' + row.day + '-' + row.year, row.hour + ':' + minutes);
+                console.log(row.entry_id, row.handle, row.mood, row.month + '-' + row.day + '-' + row.year, row.hour + ':' + minutes);
                 // NOTE: the minutes column doesn't cannot store leading zeros
                 // so to combat this problem we add a zero onto it when it is read
                 // Don't forget!
             };
-            console.log(row.entry_id, row.handle, row.month + '-' + row.day + '-' + row.year, row.hour + ':' + row.minute);
+            console.log(row.entry_id, row.handle, row.mood, row.month + '-' + row.day + '-' + row.year, row.hour + ':' + row.minute);
             // if minute column is > 10 no need to add a leading zero
         });
     });
@@ -109,6 +109,12 @@ app.get('/list', function (req, res) {
     res.redirect('/')
     // redirect
 });
+
+
+app.get('/graph', function (req, res) {
+    res.send('');
+});
+
 
 app.listen(3000, () => {
     console.log('App listens on port 3000!');
