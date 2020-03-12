@@ -143,7 +143,6 @@ app.post('/graph', urlencodedParser, function (req, res) {
         });
     } else {
         res.send('You did not enter a handle. Cannot Query Database.');
-        console.log('passt ds');
     };
 });
 
