@@ -54,11 +54,7 @@ app.post('/handle', urlencodedParser, function (req, res) {
     let year = today.getFullYear()
     let hour = today.getHours()
     let minutes = today.getMinutes();
-    var handle_entered = '"' + `${req.body['handle']}` + '"'
-    // setting the other time variables and the handle
-    // NOTE: we add "" around the handle string so that SQLite recognizes it as a string when we insert it,
-    // just using VALUES(@testhandle) will NOT work, use: VALUES("@testhandle")
-    // must do this because of the arroba
+    var handle_entered = `${req.body['handle']}`
 
     open_con();
     // open connection to database
@@ -118,11 +114,11 @@ app.post('/graph', urlencodedParser, function (req, res) {
         // declares database object
         // doesn't print message because object functions haven't been called yet
 
-        let hand_sel = `SELECT * FROM handles WHERE handle="${req.body['handle']}"`;
+        let hand_sel = `SELECT * FROM handles WHERE handle='${req.body['handle']}'`;
         // set selection criteria
 
         // db.all is a async function and will be executed after everthing in the code
-        // TO DO: figure out what it's promise is and how that all works
+        // TO DO: figure out what it's promise is and how that all works, and how it effect variable scope
         // for now I've stuck the res.send and close_con() inside so that they still work
         db.all(hand_sel, [], (err, rows) => {
             // db.all() connects to the database and brings all of the contents into memory (expensive if many entries)
