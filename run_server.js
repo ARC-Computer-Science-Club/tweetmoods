@@ -173,9 +173,10 @@ app.post('/graph', urlencodedParser, function (req, res) {
         let hand_sel = `SELECT * FROM handles WHERE handle='${req.body['handle']}'`;
         // set selection criteria
 
-        // db.all is a async function and will be executed after everthing in the code
+        // db.all will be executed after everthing in the code because it takes the longest to execute
         // TO DO: figure out what it's promise is and how that all works, and how it effect variable scope
         // for now I've stuck the res.send and close_con() inside so that they still work
+
         db.all(hand_sel, [], (err, rows) => {
             // db.all() connects to the database and brings all of the contents into memory (expensive if many entries)
             // then we search through all the entries in memory
@@ -191,8 +192,8 @@ app.post('/graph', urlencodedParser, function (req, res) {
             var data_list = rows;
             close_con();
             res.send(data_list)
-        });*/
-
+        });
+        */
 
 
 
