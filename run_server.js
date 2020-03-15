@@ -41,7 +41,7 @@ var query_func = function (callback, sel_data, res_obj) {
     });
 
     db.serialize(function() {
-        // db.serialize gurantees each line below finishes executing for the next begins
+        // db.serialize gurantees each line below finishes executing before the next begins
         // important so the query can finish before the database is closed (callback() finishes before .close())
 
         db.all(sel_data, [], (err, rows) => {
