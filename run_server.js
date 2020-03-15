@@ -25,10 +25,40 @@ function close_con() {
         if (err) {
             return console.error(err.message);
         }
-        console.log('Close the database connection.');
+        console.log('Closed the database connection.');
     });
 }
 // function to close the sqlite connection
+
+
+// See /graph route for description of what is happening here
+var query_func = function (callback, sel_data, res_obj) {
+    var db = new sqlite3.Database('tweets.db', sqlite3.OPEN_READONLY, (err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        console.log('Connected to tweets.db Database.');
+    });
+
+    db.serialize(function() {
+        // db.serialize gurantees each line below finishes executing for the next begins
+        // important so the query can finish before the database is closed (callback() finishes before .close())
+
+        db.all(sel_data, [], (err, rows) => {
+            if (err) {
+                console.log(err);
+            }
+            callback(rows, res_obj);
+            db.close();
+            console.log('Closed the database connection.')
+        });
+
+    });
+};
+
+var send = function (message, res_obj) {
+    res_obj.send(message);
+};
 
 
 
@@ -110,6 +140,32 @@ app.get('/list', function (req, res) {
 app.post('/graph', urlencodedParser, function (req, res) {
 
     if (req.body['handle']) {
+
+        let hand_sel = `SELECT * FROM handles WHERE handle='${req.body['handle']}'`;
+        query_func(send, hand_sel, res)
+
+
+        // I have figured it out, db.all() is not an async function
+        // In the above code I use callbacks to make the res.send() function run after the query
+
+        // The query function takes in three parameters
+        // 1. the send() function (which takes itself a 1. message and 2. res_obj)
+        // 2. the selection criteria (hand_sel)
+        // 3. the res object, so that we can later send it into the send() function
+
+        // the code runs through the query_func
+        // which opens the connection to the database, queries the database,
+        // then applies the send() function to the output (i.e. rows)
+        // here is where we need to res_obj that we passed into the query_func() function
+        // we pass (rows) and the (res_obj) into the send() function (res_obj is needed to access res.send() function)
+        // the code waits for the send() function to finish, then closes the database
+
+        // this way works the same as before but the connection to the database closes after the data is sent to the client through res.send()
+
+
+
+        // OBSELETE (SAVE JUST IN CASE)
+        /*
         open_con();
         // declares database object
         // doesn't print message because object functions haven't been called yet
@@ -134,9 +190,12 @@ app.post('/graph', urlencodedParser, function (req, res) {
             };
             var data_list = rows;
             close_con();
-            res.send(data_list);
+            res.send(data_list)
+        });*/
 
-        });
+
+
+
     } else {
         res.send('You did not enter a handle. Cannot Query Database.');
     };
