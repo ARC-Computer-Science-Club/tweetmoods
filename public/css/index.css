@@ -1,0 +1,74 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    background: linear-gradient(90deg, rgba(41, 37, 86, 0.73) 0%, rgba(117, 82, 139, 0.311771) 58.89%, rgba(211, 115, 156, 0.51) 93.44%);
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+.graph-img {
+    width: 1.20em;
+    height: 1.20em;
+}
+
+.input-group-text {
+    border-color: #35577D;
+    border-radius: 10px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.form-control {
+    border-color: #35577D;
+    border-radius: 10px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.input-group {
+    margin-top: 30px;
+    zoom: 300%;
+}
+
+#analyze-btn {
+    height: 80px;
+    width: 400px;
+    margin-left: 25px;
+    font-size: 30px;
+}
+
+#graph-btn {
+    height: 80px;
+    width: 500px;
+    font-size: 30px;
+    margin-top: 40px;
+    margin-bottom: 120px;
+    margin-right: 7px;
+}
+
+.b1 {
+    width: 93px;
+    font-size: 28px;
+    font-family: 'Oswald', sans-serif;
+    text-align: right;
+    margin-right: 19px;
+    margin-left: 0px;
+    color: white;
+}
+
+.b2 {
+    width: 128px;
+    font-size: 28px;
+    font-family: 'Oswald', sans-serif;
+    text-align: right;
+    color: white;
+}
