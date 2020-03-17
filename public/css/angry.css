@@ -24,7 +24,7 @@ header {
     height: 712px;
     margin-top: 40px;
 
-    background: radial-gradient(50% 50% at 50% 50%, #040202 17.71%, rgba(0, 0, 0, 0) 100%);
+    background: radial-gradient(50% 50% at 50% 50%, #898989 17.71%, rgba(0, 0, 0, 0) 100%);
 }
 
 .emoji-position {
@@ -64,14 +64,14 @@ h1 {
     font-size: 32px;
     font-weight: 300;
     text-transform: uppercase;
-    text-shadow: 2px 2px 4px #000000;
+    text-shadow: 3px 3px 5px #000000;
 }
 
 p {
     color: white;
     font-family: 'Varela Round', sans-serif;
     font-size: 20px;
-    text-shadow: 2px 2px 4px #000000;
+    text-shadow: 3px 3px 5px #000000;
 }
 
 strong {
