@@ -80,8 +80,6 @@ var send = function (message, res_obj) {
             minute_array.push(row.minute);
         };
     });
-    console.log(moods_array);
-    console.log(minute_array);
     res_obj.render('graph', { data: message , hour_array: hour_array , moods_array: moods_array , minute_array: minute_array});
 };
 
