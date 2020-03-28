@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="./server.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <canvas id="myChart"></canvas>
+</div>
+<script>
+    moods_array = "<%= moods_array %>";
+    hour_array = "<%= hour_array %>";
+    minute_array = "<%= minute_array %>";
+    time_array = [];
+    num = 0
+    moods_array_split = moods_array.split(",")
+    hour_array_split = hour_array.split(",")
+    minute_array_split = minute_array.split(",")
+    hour_array_split.forEach((hour) => {
+        time_array.push(hour + ":" + minute_array_split[num])
+        num++
+    });
+    var ctx = document.getElementById('myChart');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: time_array,
+            datasets: [{
+                label: 'Mood',
+                data: moods_array_split
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,8 +1,16 @@
-const express = require('express'); // analogue of #include <express> in C++
+var express = require('express'); // analogue of #include <express> in C++
 var bodyParser = require('body-parser')
-const sqlite3 = require('sqlite3').verbose()
-const app = express();
+var sqlite3 = require('sqlite3').verbose()
+var Chart = require('chart.js');
+var path = require('path');
+var app = express();
 var today = new Date();
+
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', path.join(__dirname, 'views'));
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
 
 
@@ -56,8 +64,25 @@ var query_func = function (callback, sel_data, res_obj) {
     });
 };
 
+// function that we will apply to our query data
+// uses node.js res object to send the query data to the client
+// eventually would like to put graph creation in here
 var send = function (message, res_obj) {
-    res_obj.send(message);
+    moods_array = [];
+    hour_array = [];
+    minute_array = [];
+    message.forEach((row) => {
+        moods_array.push(row.mood);
+        hour_array.push(row.hour);
+        if (row.minute < 10) {
+            minute_array.push("0" + row.minute);
+        } else {
+            minute_array.push(row.minute);
+        };
+    });
+    console.log(moods_array);
+    console.log(minute_array);
+    res_obj.render('graph', { data: message , hour_array: hour_array , moods_array: moods_array , minute_array: minute_array});
 };
 
 
@@ -87,13 +112,13 @@ app.post('/handle', urlencodedParser, function (req, res) {
     var handle_entered = `${req.body['handle']}`
 
     open_con();
-    // open connection to database
+    // declare database object
 
 
     console.log(handle_entered +'' + ' ' + month + '-' + day + '-' + year + ' ' + hour + ':' + minutes);
     // debug print statement
 
-    let query = `INSERT INTO handles(handle, mood, month, day, year, hour, minute) VALUES('${handle_entered}',1,'${month}','${day}','${year}','${hour}','${minutes}')`;
+    let query = `INSERT INTO handles(handle, mood, month, day, year, hour, minute) VALUES('${handle_entered}',2,'${month}','${day}','${year}','${hour}','${minutes}')`;
     db.run(query);
     // insert data into table
 
@@ -107,7 +132,7 @@ app.post('/handle', urlencodedParser, function (req, res) {
 // this is route that prints all the entries in the database onto the console
 app.get('/list', function (req, res) {
     open_con();
-    // open connection to database
+    // declare database obj.
     let sel2 = 'SELECT * FROM handles ORDER BY entry_id'
     // create selection string ( select everything (*) from the table handles and order it by entry_id )
     db.all(sel2, [], (err, rows) => {
@@ -136,6 +161,13 @@ app.get('/list', function (req, res) {
     // redirect
 });
 
+app.get('/graph', function (req, res) {
+
+    let hand_sel = `SELECT * FROM handles`;
+    query_func(send, hand_sel, res)
+
+});
+
 
 app.post('/graph', urlencodedParser, function (req, res) {
 
@@ -145,7 +177,6 @@ app.post('/graph', urlencodedParser, function (req, res) {
         query_func(send, hand_sel, res)
 
 
-        // I have figured it out, db.all() is not an async function
         // In the above code I use callbacks to make the res.send() function run after the query
 
         // The query function takes in three parameters
