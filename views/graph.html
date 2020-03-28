@@ -25,7 +25,7 @@
     });
     var ctx = document.getElementById('myChart');
     var myChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: time_array,
             datasets: [{
@@ -34,6 +34,11 @@
             }]
         },
         options: {
+            elements: {
+                line: {
+                    tension: 0
+                }
+            },
             scales: {
                 yAxes: [{
                     ticks: {
