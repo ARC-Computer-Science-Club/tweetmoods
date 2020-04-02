@@ -40,7 +40,7 @@ function close_con() {
 
 
 // See /graph route for description of what is happening here
-var query_func = function (callback, sel_data, res_obj) {
+var query_func = function (callback, handle, sel_data, res_obj) {
     var db = new sqlite3.Database('tweets.db', sqlite3.OPEN_READONLY, (err) => {
         if (err) {
             return console.error(err.message);
@@ -56,7 +56,7 @@ var query_func = function (callback, sel_data, res_obj) {
             if (err) {
                 console.log(err);
             }
-            callback(rows, res_obj);
+            callback(rows, res_obj, handle);
             db.close();
             console.log('Closed the database connection.')
         });
@@ -67,7 +67,7 @@ var query_func = function (callback, sel_data, res_obj) {
 // function that we will apply to our query data
 // uses node.js res object to send the query data to the client
 // eventually would like to put graph creation in here
-var send = function (message, res_obj) {
+var send = function (message, res_obj, handle) {
     moods_array = [];
     hour_array = [];
     minute_array = [];
@@ -80,7 +80,7 @@ var send = function (message, res_obj) {
             minute_array.push(row.minute);
         };
     });
-    res_obj.render('graph', { data: message , hour_array: hour_array , moods_array: moods_array , minute_array: minute_array});
+    res_obj.render('graph', { data: message , hour_array: hour_array , moods_array: moods_array , minute_array: minute_array , handle: handle});
 };
 
 
@@ -161,7 +161,7 @@ app.get('/list', function (req, res) {
 
 app.get('/graph', function (req, res) {
 
-    let hand_sel = `SELECT * FROM handles`;
+    let hand_sel = `SELECT ${req.body['handle']} FROM handles`;
     query_func(send, hand_sel, res)
 
 });
@@ -172,7 +172,7 @@ app.post('/graph', urlencodedParser, function (req, res) {
     if (req.body['handle']) {
 
         let hand_sel = `SELECT * FROM handles WHERE handle='${req.body['handle']}'`;
-        query_func(send, hand_sel, res)
+        query_func(send, req.body['handle'], hand_sel, res)
 
 
         // In the above code I use callbacks to make the res.send() function run after the query

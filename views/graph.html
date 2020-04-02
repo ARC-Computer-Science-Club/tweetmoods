@@ -42,9 +42,16 @@
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        suggestedMax: 5,
+                        stepSize: 1
                     }
                 }]
+            },
+            title: {
+                display: true,
+                text: "<%= handle %>",
+                fontSize: 30
             }
         }
     });
