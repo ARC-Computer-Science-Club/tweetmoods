@@ -80,7 +80,14 @@ var send = function (message, res_obj, handle) {
             minute_array.push(row.minute);
         };
     });
-    res_obj.render('graph', { data: message , hour_array: hour_array , moods_array: moods_array , minute_array: minute_array , handle: handle});
+
+    res_obj.render('graph', {
+        data: message,
+        hour_array: hour_array,
+        moods_array: moods_array,
+        minute_array: minute_array,
+        handle: handle
+    });
 };
 
 
