@@ -91,7 +91,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 // HOME PAGE
 app.get('/', (req, res) => {
-    res.sendFile(process.cwd()+ '\\intro.html');
+    res.sendFile(process.cwd()+ '/intro.html');
 });
 
 // handle page for get request (just redirect to home)
