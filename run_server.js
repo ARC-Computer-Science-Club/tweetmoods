@@ -124,6 +124,7 @@ var send_func = function (rows, res_obj, handle) {
             info_dict.minute_array.push(row.minute);
         };
     });
+
     res_obj.render('graph', {
         data: rows ,
         hour_array: info_dict.hour_array ,
