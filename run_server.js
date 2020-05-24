@@ -93,9 +93,9 @@ app.get('/list', function (req, res) {
 
     let sel2 = 'SELECT * FROM handles ORDER BY entry_id'
     // create selection string ( select everything (*) from the table handles and order it by entry_id )
-    query_func(list_func, 'dummy_handle', sel2, res)
+    query_func(callback = list_func, handle = undefined, sel_data = sel2, res_obj = res)
     // use list_func() as a callback in query_func()
-    // don't need handle or res objec, but put them in for compatability
+    // don't need handle so set it to undefined/Null
 
     res.redirect('/')
     // redirect
@@ -104,7 +104,7 @@ app.get('/list', function (req, res) {
 app.post('/graph', urlencodedParser, function (req, res) {
     if (req.body['handle']) {
         let hand_sel = `SELECT * FROM handles WHERE handle='${req.body['handle']}'`;
-        query_func(send_func, req.body['handle'], hand_sel, res)
+        query_func(callback = send_func, handle = req.body['handle'], sel_data = hand_sel, res_obj = res)
         // In the above code I use callbacks to make the res.send() function run after the query
         // The query function takes in four parameters
         // 1. the send() function (which takes itself 1. message 2. res_obj 3. handle)
